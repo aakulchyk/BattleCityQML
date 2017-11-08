@@ -1,0 +1,17 @@
+<br />
+<b>Warning</b>:  mysql_query(): Too many connections in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>9</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): A link to the server could not be established in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>9</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): Too many connections in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>10</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): A link to the server could not be established in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>10</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): Too many connections in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>11</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): A link to the server could not be established in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>11</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): Too many connections in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>12</b><br />
+<br />
+<b>Warning</b>:  mysql_query(): A link to the server could not be established in <b>/var/www/api.wm-scripts.ru/connect.php</b> on line <b>12</b><br />
+<P> В настоящий момент сервер базы данных не доступен, поэтому корректное отображение страницы невозможно. </P>
