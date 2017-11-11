@@ -5,6 +5,9 @@ Component {
     EntityBase {
         entityType: "explosion"
         id: explosion
+        //width: scene.gridSize*2
+        //height: scene.gridSize*2
+
         poolingEnabled: false
         property bool big: false
         property int phase: 0
@@ -13,8 +16,8 @@ Component {
             id: explosionAnimation
             anchors.centerIn: parent
             defaultSource: "../assets/img/explosion.png"
-            width: 64
-            height: 64
+            width: scene.gridSize*2
+            height: scene.gridSize*2
             z: 10
             property int rate: 15
             property alias smallExplFrames: smallExplosionSprite.frameCount

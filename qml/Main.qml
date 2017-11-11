@@ -8,6 +8,7 @@ GameWindow {
     // the content of the logical scene size (480x320 by default) gets scaled to the window size based on the scaleMode
     screenWidth: 960
     screenHeight: 640
+    color: "grey"
 
     // You get free licenseKeys from https://v-play.net/licenseKey
     // With a licenseKey you can:
@@ -26,10 +27,6 @@ GameWindow {
         startGameScene()
     }
 
-    property int tileSize : 32
-    property int borderWidth : 16
-    property int borderHeight : 16
-
     // this gets set from Monster, after it reached the player and is read by the GameOverScene to display if the player has won or lost
     property bool gameWon
 
@@ -47,6 +44,57 @@ GameWindow {
         entityContainer: scene
         //poolingEnabled: true
     }
+
+    Rectangle {
+        id: vgamepad
+        visible: scene.visible
+        width: 200
+        height: width*3
+        anchors.top: parent.verticalCenter
+        anchors.leftMargin: scene.borderWidth
+        color: "grey"
+
+        ControlButton {
+            id: upButton
+            x: width/2; y:0
+            action: "moveUp"
+        }
+        ControlButton {
+            id: leftButton
+            anchors.top: upButton.bottom
+            anchors.left: parent.left
+            action: "moveLeft"
+        }
+        ControlButton {
+            id: rightButton
+            anchors.top: upButton.bottom
+            anchors.left: leftButton.right
+            action: "moveRight"
+        }
+        ControlButton {
+            id: downButton
+            anchors.top: leftButton.bottom
+            anchors.horizontalCenter: leftButton.right
+            action: "moveDown"
+        }
+    }
+
+    ControlButton {
+        id: fireButton
+        visible: scene.visible
+        width: 100; height: 100
+
+        color: "red"
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        anchors.rightMargin: scene.borderWidth
+        anchors.bottomMargin: height
+
+        action: "fire"
+    }
+
+
 
     // switch to this scene, after the game was lost or won and it switches back to the gameScene after 3 seconds
     Scene {
@@ -78,20 +126,28 @@ GameWindow {
             loops: 1
             source: "../assets/snd/game_over.mp3"
         }
-
-
     }// GameOverScene
 
     Scene {
         id: scene
 
+        property int borderWidth : 4
+        property int borderHeight : 4
+
         property int tilesX: 15
         property int tilesY: 10
 
-        // the "logical size" - the scene content is auto-scaled to match the GameWindow size
-        width: tileSize*tilesX + borderWidth*2
-        height: tileSize*tilesY + borderHeight*2
+        gridSize: 32
 
+        // the "logical size" - the scene content is auto-scaled to match the GameWindow size
+        width: gridSize*tilesX + borderWidth*2
+        height: gridSize*tilesY + borderHeight*2
+
+        anchors.left: vgamepad.right
+
+        backButtonAutoAccept: true
+
+        property alias player: player
 
         Rectangle {
             anchors.fill: parent
@@ -106,16 +162,16 @@ GameWindow {
         Wall {id: wall}
         Eagle {id: eagle}
 
-        Border {x:0; y:0; width: scene.width; height: borderHeight}
-        Border {x:0; y:borderHeight; width: borderWidth; height: scene.height-borderHeight*2}
-        Border {x:0; y:scene.height-borderHeight; width: scene.width; height: borderHeight}
-        Border {x:scene.width-borderWidth; y:borderHeight; width: borderWidth; height: scene.height-borderHeight*2}
+        Border {x:0; y:0; width: scene.width; height: scene.borderHeight}
+        Border {x:0; y:scene.borderHeight; width: scene.borderWidth; height: scene.height-scene.borderHeight*2}
+        Border {x:0; y:scene.height-scene.borderHeight; width: scene.width; height: scene.borderHeight}
+        Border {x:scene.width-scene.borderWidth; y:scene.borderHeight; width: scene.borderWidth; height: scene.height-scene.borderHeight*2}
 
-        Keys.forwardTo: player.controller
+        Keys.forwardTo: player ? player.controller : null
 
         SoundEffectVPlay {
             id: bulletCreationSound
-            source: "../assets/snd/Battle City SFX (6).wav" // gets played when a projectile is created below
+            source: "../assets/snd/shot.wav" // gets played when a projectile is created below
         }
 
         SoundEffectVPlay {
@@ -146,13 +202,13 @@ GameWindow {
         SoundEffectVPlay {
             id: objectDestroyedSound
             loops: 1
-            source: "../assets/snd/Battle City SFX (7).wav"
+            source: "../assets/snd/smallExplosion.wav"
         }
 
         SoundEffectVPlay {
             id: eagleDestroyedSound
             loops: 1
-            source: "../assets/snd/Battle City SFX (11).wav"
+            source: "../assets/snd/bigExplosion.wav"
         }
 
         SoundEffectVPlay {
@@ -185,6 +241,18 @@ GameWindow {
     }
 
 
+    function xByPos(posX) {
+        return scene.borderWidth  +  posX * scene.gridSize
+    }
+
+    function yByPos(posY) {
+        return scene.borderHeight  +  posY * scene.gridSize
+    }
+
+    function addTarget() {
+        var pos = Math.floor(Math.random()*scene.tilesX)
+        entityManager.createEntityFromComponentWithProperties(enemy, {"x": xByPos(pos), "y": yByPos(0)})
+    }
 
     onSplashFinishedChanged: {
         if (splashFinished === false)
@@ -263,27 +331,13 @@ GameWindow {
         tankMovingSound.play()
     }
 
-    function xByPos(posX) {
-        return borderWidth + posX*tileSize
-    }
-
-    function yByPos(posY) {
-        return borderHeight + posY*tileSize
-    }
-
-    function addTarget() {
-        var pos = Math.floor(Math.random()*scene.tilesX)
-        entityManager.createEntityFromComponentWithProperties(enemy, {"x": xByPos(pos), "y": yByPos(0)})
-    }
-
     function changeToGameOverScene(won) {
         // reset the game variables and remove all projectiles and monsters
         scene.visible = false
-        //entityManager.removeEntitiesByFilter(["wall", "eagle", "tank", "bullet", "explosion"])
         gameWon = won
         gameOverScene.visible = true
         gameOverMusic.play()
-
+        entityManager.removeEntitiesByFilter(["wall", "eagle", "tank", "bullet", "explosion"])
 
 
     }

@@ -56,4 +56,7 @@ DISTFILES += \
     qml/EnemySpriteAnimation.qml \
     qml/BaseSpriteSequence.qml \
     qml/BasicObject.qml \
-    qml/Explosion.qml
+    qml/Explosion.qml \
+    qml/ControlButton.qml
+
+HEADERS +=

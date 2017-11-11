@@ -42,8 +42,6 @@ BasicObject {
             if (otherEntityType === "tank" && moving === false)
                 horizontalVelocity = verticalVelocity = 0; // prevent from slipping
 
-            //console.log("collide: " + otherEntityType + " + " + parent.entityType + "(this)")
-
             if (otherEntityType === "bullet" && otherEntity.ownerId != parent.stringId) {
                 otherEntity.removeEntity()
                 hp--
@@ -100,10 +98,10 @@ BasicObject {
     }
 
     function fire() {
-        var bulletOffset = 12//width/2 - bullet.width/2
+        var bulletOffset = width/2 - width/8
         console.log("fire:" + width + " " + height + " " + bullet.width + " " + bullet.height)
-        var sourceX = x + ((direction==1 || direction==3) ? bulletOffset : (direction==0) ? 0 : 32)
-        var sourceY = y + ((direction==0 || direction==2) ? bulletOffset : (direction==1) ? 0 : 32)
+        var sourceX = x + ((direction==1 || direction==3) ? bulletOffset : (direction==0) ? 0 : width)
+        var sourceY = y + ((direction==0 || direction==2) ? bulletOffset : (direction==1) ? 0 : height)
 
         var source = Qt.point(Math.round(sourceX), Math.round(sourceY))
 
@@ -111,7 +109,7 @@ BasicObject {
         var targetY = (direction==0 || direction==2) ? source.y : (direction==1) ? 0 : scene.height
         var target = Qt.point(Math.round(targetX), Math.round(targetY))
         var length = Math.abs(targetX-x + targetY-y)
-        var velocity = 120
+        var velocity = scene.gridSize*4
         var realMoveDuration = Math.round(length / velocity * 1000)
 
         var propertiesList = {

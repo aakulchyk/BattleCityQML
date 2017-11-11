@@ -8,8 +8,8 @@ EntityBase {
     property bool removeAfterDestruction: true
     property bool isDestroyed: false
 
-    width: 32
-    height: 32
+    width: scene.gridSize
+    height: scene.gridSize
 
     function explode(bigExplosion) {
         var propertiesList = {

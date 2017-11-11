@@ -7,8 +7,8 @@ Component
         entityType: "bullet"
         z: 2
 
-        width: 8
-        height: 8
+        width: scene.gridSize/4
+        height: scene.gridSize/4
 
         property point source
         property point destination
@@ -62,11 +62,19 @@ Component
 
         BoxCollider
         {
-            //anchors.centerIn: parent
             width: bulletSprite.width
             height: bulletSprite.height
             bullet: true
             collisionTestingOnlyMode: true
+            fixture.onContactChanged: {
+                var otherEntity = other.getBody().target
+                var otherEntityType = otherEntity.entityType
+
+                if (otherEntityType === "bullet") {
+                    otherEntity.removeEntity()
+                    bulletHitWallSound.play()
+                }
+            }
         }
     }
 }
