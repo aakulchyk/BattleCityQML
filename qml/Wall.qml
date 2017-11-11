@@ -11,11 +11,12 @@ Component {
         property alias spriteColumn: wallSprite.startFrameColumn
         property alias spriteFrames: wallSprite.frameCount
 
-        //property variant sides: {'lt':true, 'rt': true, 'lb': true, 'rd': true}
         property bool lt: true
         property bool rt: true
         property bool lb: true
         property bool rb: true
+
+        property bool bulletWasVertical
 
         onTypeChanged: {
             switch (type) {
@@ -52,8 +53,6 @@ Component {
                 spriteRow = 3; spriteColumn = 19
                 z = 1
                 break
-
-
             }
         }
 
@@ -74,12 +73,16 @@ Component {
             if (rb) cnt++
 
             if (cnt == 3) {
-                var rnd = Math.floor(Math.random()*2)
+                var v = bulletWasVertical
 
-                if (!lt || !rb)
-                    if (rnd) lb = false; else rt = false
-                else if (!rt || !lb)
-                    if (rnd) lt = false; else rb = false
+                if (!lt)
+                    if (v) rt = false; else lb = false
+                else if (!rt)
+                    if (v) lt = false; else rb = false
+                else if (!lb)
+                    if (v) rb = false; else lt = false
+                else if (!rb)
+                    if (v) lb = false; else rt = false
 
                 cnt = 2
             }
@@ -194,6 +197,7 @@ Component {
             var otherEntityType = otherEntity.entityType
 
             if (otherEntityType === "bullet") {
+                bulletWasVertical = otherEntity.vertical
                 undergoBullet(side, otherEntity)
             }
 

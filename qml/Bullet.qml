@@ -12,6 +12,7 @@ Component
 
         property point source
         property point destination
+        property bool vertical: source.x == destination.x
         property int moveDuration
         property string ownerId
 
