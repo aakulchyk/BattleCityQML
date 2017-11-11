@@ -10,6 +10,7 @@ BasicObject {
     property int direction: 1 // 0-left, 1-up, 2-right, 3-down
     property int speed: 50
     property int hp: 1
+    property int gunLevel: 1
     property string stringId: generateStringId()
     property int bulletsFired: 0
     property int maxBullets: 1
@@ -67,6 +68,10 @@ BasicObject {
     }
 
     Bullet {id: bullet}
+    Timer {
+        id:bulletTimer
+        interval: 2500 / parent.gunLevel
+    }
 
     function move(dir) {
         var actionName = "undefined"
@@ -98,6 +103,7 @@ BasicObject {
     }
 
     function fire() {
+        if (bulletTimer.running) return
         var bulletOffset = width/2 - width/8
         console.log("fire:" + width + " " + height + " " + bullet.width + " " + bullet.height)
         var sourceX = x + ((direction==1 || direction==3) ? bulletOffset : (direction==0) ? 0 : width)
@@ -118,10 +124,10 @@ BasicObject {
             "source": source, "destination": target,
             "moveDuration": realMoveDuration
         }
-        /*var entityId = */entityManager.createEntityFromComponentWithProperties(bullet, propertiesList)
-        //var bulletEntity = entityManager.getEntityById(entityId)
+        entityManager.createEntityFromComponentWithProperties(bullet, propertiesList)
 
         bulletCreationSound.play()
+        bulletTimer.start()
     }
 
     function generateStringId()
