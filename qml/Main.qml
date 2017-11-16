@@ -159,6 +159,7 @@ GameWindow {
         Player {id: player; x: xByPos(5); y: yByPos(9)}
 
         Enemy {id: enemy}
+        Bonus {id: bonus}
         Wall {id: wall}
         Eagle {id: eagle}
 
@@ -217,6 +218,12 @@ GameWindow {
             source: "../assets/snd/ice.wav"
         }
 
+        SoundEffectVPlay {
+            id: bonusSound
+            loops: 1
+            source: "../assets/snd/bonus.wav"
+        }
+
         PhysicsWorld {
             //debugDrawVisible: true
         } // put it anywhere in the Scene, so the collision detection between monsters and projectiles can be done
@@ -252,6 +259,19 @@ GameWindow {
     function addTarget() {
         var pos = Math.floor(Math.random()*scene.tilesX)
         entityManager.createEntityFromComponentWithProperties(enemy, {"x": xByPos(pos), "y": yByPos(0)})
+    }
+
+    function addBonus() {
+        var types = ["helmet", "clock", "shovel", "star", "grenade", "tank", "gun"]
+        var typeI = Math.floor(Math.random()*types.length)
+        var posX = Math.floor(Math.random()*scene.tilesX)
+        var posY = Math.floor(Math.random()*scene.tilesY)
+        var propertiesList = {
+            "type": types[typeI],
+            "x": xByPos(posX),
+            "y": yByPos(posY)
+        }
+        entityManager.createEntityFromComponentWithProperties(bonus, propertiesList)
     }
 
     onSplashFinishedChanged: {
@@ -319,7 +339,13 @@ GameWindow {
         running: scene.visible == true && splashFinished // only enable the creation timer, when the gameScene is visible
         repeat: true
         interval: 5000 // a new target(=monster) is spawned every second
-        onTriggered: addTarget()
+        onTriggered: {
+            var r = Math.floor(Math.random()*4)
+            if (r<3)
+                addTarget()
+            else
+                addBonus()
+        }
     }
 
     function startGameScene() {

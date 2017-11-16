@@ -57,6 +57,7 @@ DISTFILES += \
     qml/BaseSpriteSequence.qml \
     qml/BasicObject.qml \
     qml/Explosion.qml \
-    qml/ControlButton.qml
+    qml/ControlButton.qml \
+    qml/Bonus.qml
 
 HEADERS +=
